@@ -51,7 +51,7 @@ function App() {
           <p className="eyebrow">TATUAGEM AUTORAL · PORTO ALEGRE</p>
           <h1>O silêncio dos pontos, marcado na pele.</h1>
           <p className="hero-text">Tatuagens de pontilhismo feitas com calma e paciência, projetos pensados para respeitar o seu corpo.</p>
-          <a className="button button-dark" href={artist.getWhatsAppLink()} target="_blank" rel="noreferrer">Agendar conversa <span aria-hidden="true">↗</span></a>
+          <a className="button button-dark" href={artist.getWhatsAppLink()} target="_blank" rel="noreferrer">Solicitar orçamento <span aria-hidden="true">↗</span></a>
         </div>
         <div className="hero-art" aria-label="Composição abstrata de pontos" role="img">
           <span className="ink-circle ink-circle-large"></span>
@@ -62,8 +62,8 @@ function App() {
       <section className="works-section section-width" id="trabalhos">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">01 · PORTFÓLIO</p>
-            <h2>Trabalhos recentes</h2>
+            
+            <h2>Alguns dos meus Trabalhos</h2>
           </div>
           <p>Desenhos que encontram equilíbrio entre precisão, textura e personalidade.</p>
         </div>
