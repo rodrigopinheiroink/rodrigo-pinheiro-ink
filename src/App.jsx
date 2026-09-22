@@ -83,11 +83,11 @@ function App() {
         </div>
       </section>
       <section className="about-section section-width" id="sobre">
-        <div className="about-number">02</div>
+        
         <div className="about-content">
           <p className="eyebrow">SOBRE O PROCESSO</p>
           <h2>Cada ponto tem um propósito.</h2>
-          <p>O pontilhismo constrói imagens por meio de pequenos pontos, criando sombras, volume e movimento. Meu trabalho começa na conversa: entendo sua ideia, estudo o espaço do corpo e desenho algo que faça sentido para você.</p>
+          <p>O pontilhismo constrói imagens por meio de pequenos pontos, criando sombras, volume e movimento. Meu trabalho começa na conversa: entendendo sua ideia, estudando o espaço do seu corpo e desenhando algo que faça sentido para você.</p>
           <div className="process-list">
             <div>
               <span>01</span>
