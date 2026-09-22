@@ -1,4 +1,7 @@
 import './App.css'
+import tattooFirst from './assets/Tatuagem.webp'
+import tattooGeometry from './assets/Tatuagem-geo.webp'
+import tattooGeometric from './assets/Tatuagem-geometric.webp'
 
 // Esta classe reúne os dados públicos do tatuador em um único objeto.
 // Ela é um exemplo pequeno de POO: a classe possui dados e métodos.
@@ -27,9 +30,9 @@ const artist = new TattooArtist(
 
 // Cada objeto deste array representa um item da galeria.
 const tattooWorks = [
-  { title: 'Geometria sagrada', category: 'Pontilhismo · Blackwork', image: 'https://images.unsplash.com/photo-1598371839696-5c5bb00bdc47?auto=format&fit=crop&w=900&q=85' },
-  { title: 'Natureza em pontos', category: 'Pontilhismo · Fine line', image: 'https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?auto=format&fit=crop&w=900&q=85' },
-  { title: 'Símbolo autoral', category: 'Criação personalizada', image: 'https://images.unsplash.com/photo-1542727365-19732a80dcfd?auto=format&fit=crop&w=900&q=85' },
+  { title: 'Tatuagem autoral', category: 'Pontilhismo · Blackwork', image: tattooFirst },
+  { title: 'Geometria em pontos', category: 'Pontilhismo · Fine line', image: tattooGeometry },
+  { title: 'Geometria personalizada', category: 'Criação personalizada', image: tattooGeometric },
 ]
 
 function App() {
