@@ -110,13 +110,22 @@ function App() {
       <section className="contact-section" id="contato">
         <div className="section-width contact-inner">
           <div>
-            <p className="eyebrow">03 · VAMOS CONVERSAR</p>
-            <h2>Sua próxima marca começa aqui.</h2>
+            <a className="eyebrow contact-eyebrow" href={artist.getWhatsAppLink()} target="_blank" rel="noreferrer">
+              03 · VAMOS CONVERSAR <span aria-hidden="true">↗</span>
+            </a>
+            <h2>Rodrigo Pinheiro INK.</h2>
           </div>
           <div className="contact-details">
             <a className="contact-link" href={artist.getWhatsAppLink()} target="_blank" rel="noreferrer">WhatsApp <span>↗</span></a>
             <a className="contact-link" href="https://instagram.com/rodrigopinheiroink" target="_blank" rel="noreferrer">Instagram <span>↗</span></a>
-            <p className="address">Estúdio Rodrigo Pinheiro Ink<br />{artist.address} · Porto Alegre, RS</p>
+            <a
+              className="address"
+              href="https://www.google.com/maps/search/?api=1&query=Av.+Juca+Batista%2C+770+-+Ipanema%2C+Porto+Alegre+-+RS%2C+91770-000"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Estúdio Rodrigo Pinheiro Ink<br />{artist.address} · Porto Alegre, RS
+            </a>
           </div>
         </div>
       </section>
