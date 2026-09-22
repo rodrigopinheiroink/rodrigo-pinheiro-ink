@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 dist
+GUIA-ESTUDO-LOCAL.md
 dist-ssr
 *.local
 
