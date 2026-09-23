@@ -74,10 +74,6 @@ function App() {
           {tattooWorks.map((work) => (
             <article className="work-card" key={work.title}>
               <img src={work.image} alt={`Exemplo de ${work.title}`} />
-              <div className="work-info">
-                <h3>{work.title}</h3>
-                <p>{work.category}</p>
-              </div>
             </article>
           ))}
         </div>
