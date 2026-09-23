@@ -30,9 +30,9 @@ const artist = new TattooArtist(
 
 // Cada objeto deste array representa um item da galeria.
 const tattooWorks = [
-  { title: 'Tatuagem autoral', category: 'Pontilhismo · Blackwork', image: tattooFirst },
-  { title: 'Geometria em pontos', category: 'Pontilhismo · Fine line', image: tattooGeometry },
-  { title: 'Geometria personalizada', category: 'Criação personalizada', image: tattooGeometric },
+  { image: tattooFirst },
+  { image: tattooGeometry },
+  { image: tattooGeometric },
 ]
 
 function App() {
@@ -72,8 +72,8 @@ function App() {
         </div>
         <div className="work-grid">
           {tattooWorks.map((work) => (
-            <article className="work-card" key={work.title}>
-              <img src={work.image} alt={`Exemplo de ${work.title}`} />
+            <article className="work-card" key={work.image}>
+              <img src={work.image} alt="Exemplo de tatuagem" />
             </article>
           ))}
         </div>
