@@ -60,7 +60,7 @@ function App() {
         <div className="hero-art" aria-label="Composição abstrata de pontos" role="img">
           <span className="ink-circle ink-circle-large"></span>
           <span className="ink-circle ink-circle-small"></span>
-          <span className="hero-caption">DOT<br />WORK</span>
+          <span className="hero-caption">DOT<br />WORKER</span>
         </div>
       </section>
       <section className="works-section section-width" id="trabalhos">
