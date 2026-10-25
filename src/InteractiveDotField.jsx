@@ -5,6 +5,9 @@ const spacing = 38
 const influenceRadius = 132
 const maxDisplacement = 24
 const dotRadius = 2
+const wavePath = new Path2D(
+  'M-120 255C10 135 130 160 275 248S460 362 595 274 823 148 950 250s193 125 278 7 189-121 312-1v182c-122-91-202-90-321 1s-187 102-294 4-207-111-333-12-201 117-326 5S76 319-120 440Z',
+)
 
 function InteractiveDotField() {
   const canvasRef = useRef(null)
@@ -24,10 +27,50 @@ function InteractiveDotField() {
     let pointer = null
     let strength = 0
     let drawFrame = 0
+    let waveFrame = 0
     let fadeFrame = 0
+    let lastWaveDraw = 0
+    const hero = document.querySelector('.hero-section')
 
     const draw = () => {
       context.clearRect(0, 0, width, height)
+
+      const heroRect = hero?.getBoundingClientRect()
+      const waveTransform = hero
+        ? new DOMMatrix(getComputedStyle(hero, '::before').transform)
+        : null
+      const waveScale = heroRect
+        ? Math.max(heroRect.width / 1440, heroRect.height / 900)
+        : 0
+      const backgroundOffsetX = heroRect
+        ? (heroRect.width - 1440 * waveScale) / 2
+        : 0
+      const originX = heroRect ? heroRect.width / 2 : 0
+      const originY = heroRect ? heroRect.height / 2 : 0
+      const determinant = waveTransform
+        ? waveTransform.a * waveTransform.d - waveTransform.b * waveTransform.c
+        : 0
+
+      const isInsideWave = (x, y) => {
+        if (!heroRect || !waveTransform || !determinant || !waveScale) {
+          return false
+        }
+
+        const transformedX = x - heroRect.left - originX - waveTransform.e
+        const transformedY = y - heroRect.top - originY - waveTransform.f
+        const localX =
+          (waveTransform.d * transformedX - waveTransform.c * transformedY) / determinant +
+          originX
+        const localY =
+          (-waveTransform.b * transformedX + waveTransform.a * transformedY) / determinant +
+          originY
+
+        return context.isPointInPath(
+          wavePath,
+          (localX - backgroundOffsetX) / waveScale,
+          localY / waveScale,
+        )
+      }
 
       for (let y = spacing / 2; y < height; y += spacing) {
         for (let x = spacing / 2; x < width; x += spacing) {
@@ -47,6 +90,10 @@ function InteractiveDotField() {
               offsetX = directionX * maxDisplacement * proximity
               offsetY = directionY * maxDisplacement * proximity
             }
+          }
+
+          if (isInsideWave(x + offsetX, y + offsetY)) {
+            continue
           }
 
           context.beginPath()
@@ -134,11 +181,24 @@ function InteractiveDotField() {
       fadeBack(performance.now(), strength)
     }
 
+    const redrawWave = (time) => {
+      if (time - lastWaveDraw >= 33) {
+        draw()
+        lastWaveDraw = time
+      }
+
+      waveFrame = window.requestAnimationFrame(redrawWave)
+    }
+
     resize()
     window.addEventListener('resize', resize)
     window.addEventListener('pointermove', handlePointerMove, { passive: true })
     window.addEventListener('pointerout', handlePointerLeave)
     window.addEventListener('blur', handleWindowBlur)
+
+    if (!reducedMotion) {
+      waveFrame = window.requestAnimationFrame(redrawWave)
+    }
 
     return () => {
       window.removeEventListener('resize', resize)
@@ -150,15 +210,21 @@ function InteractiveDotField() {
         window.cancelAnimationFrame(drawFrame)
       }
 
+      if (waveFrame) {
+        window.cancelAnimationFrame(waveFrame)
+      }
+
       if (fadeFrame) {
         window.cancelAnimationFrame(fadeFrame)
       }
     }
   }, [])
 
+  const root = document.getElementById('root')
+
   return createPortal(
     <canvas ref={canvasRef} className="interactive-dot-field" aria-hidden="true" />,
-    document.body,
+    root,
   )
 }
 

@@ -111,7 +111,7 @@ nav a:hover::before,
   background: url('/agent-wave.svg') center top / cover no-repeat;
   pointer-events: none;
   transform: translate3d(0, 0, 0);
-  animation: hero-wave-drift 14s ease-in-out infinite alternate;
+  animation: hero-wave-drift 11s ease-in-out infinite alternate;
   will-change: transform;
 }
 
