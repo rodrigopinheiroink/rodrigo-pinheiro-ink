@@ -1,7 +1,7 @@
 import './App.css'
-import tattooFirst from './assets/Tatuagem.webp'
-import tattooGeometry from './assets/Tatuagem-geo.webp'
-import tattooGeometric from './assets/Tatuagem-geometric.webp'
+import tattooFirst from './assets/optimized/Tatuagem.webp'
+import tattooGeometry from './assets/optimized/Tatuagem-geo.webp'
+import tattooGeometric from './assets/optimized/Tatuagem-geometric.webp'
 
 // Esta classe reúne os dados públicos do tatuador em um único objeto.
 // Ela é um exemplo pequeno de POO: a classe possui dados e métodos.
@@ -73,7 +73,7 @@ function App() {
         <div className="work-grid">
           {tattooWorks.map((work) => (
             <article className="work-card" key={work.image}>
-              <img src={work.image} alt="Exemplo de tatuagem" />
+              <img src={work.image} alt="Exemplo de tatuagem" loading="lazy" decoding="async" fetchPriority="low" />
             </article>
           ))}
         </div>

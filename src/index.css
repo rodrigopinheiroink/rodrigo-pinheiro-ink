@@ -53,10 +53,25 @@ body::after {
   z-index: 0;
   inset: 0;
   content: '';
-  background: url('/dot-grid-wave.svg') center / cover no-repeat;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.32) 0.8px, transparent 1.5px);
+  background-position: 0 0;
+  background-size: 18px 18px;
   mix-blend-mode: screen;
-  opacity: 0.3;
+  opacity: 0.22;
   pointer-events: none;
+  transform: translate3d(0, 0, 0);
+  animation: dot-grid-drift 36s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes dot-grid-drift {
+  from {
+    transform: translate3d(-6px, -8px, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(6px, 8px, 0) scale(1.015);
+  }
 }
 
 #root {
@@ -90,6 +105,8 @@ p {
 
   body::after {
     background-image: none;
+    animation: none;
+    will-change: auto;
   }
 
   *,
