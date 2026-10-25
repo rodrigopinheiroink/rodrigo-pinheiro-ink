@@ -1,4 +1,5 @@
 import './App.css'
+import InteractiveDotField from './InteractiveDotField.jsx'
 import tattooFirst from './assets/optimized/Tatuagem.webp'
 import tattooGeometry from './assets/optimized/Tatuagem-geo.webp'
 import tattooGeometric from './assets/optimized/Tatuagem-geometric.webp'
@@ -125,6 +126,7 @@ function App() {
           </div>
         </div>
       </section>
+      <InteractiveDotField />
       <footer className="site-footer section-width">
         <span>© 2026 {artist.name}</span>
         <span>Feito com intenção.</span>
