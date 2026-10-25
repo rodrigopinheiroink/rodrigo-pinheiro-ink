@@ -100,7 +100,7 @@ nav a:hover::before,
   align-items: flex-end;
   justify-content: center;
   overflow: hidden;
-  padding: 100px 24px 92px;
+  padding: 100px 24px 34px;
 }
 
 .hero-section::before {
@@ -265,7 +265,7 @@ h1::first-line {
 }
 
 .works-section {
-  padding: 116px 0 132px;
+  padding: 58px 0 48px;
 }
 
 .section-heading {
@@ -332,7 +332,7 @@ h2 {
 }
 
 .about-section {
-  padding: 112px 0;
+  padding: 52px 0 40px;
 }
 
 .about-content {
@@ -396,7 +396,7 @@ h2 {
   display: grid;
   grid-template-columns: 1.3fr 1fr;
   gap: 80px;
-  padding: 100px 0;
+  padding: 40px 0 100px;
 }
 
 .contact-eyebrow {
@@ -506,7 +506,7 @@ h2 {
 
   .hero-section {
     min-height: min(760px, calc(100svh - 76px));
-    padding: 80px 24px 72px;
+    padding: 80px 24px 34px;
   }
 
   .hero-text {
@@ -514,16 +514,16 @@ h2 {
   }
 
   .works-section {
-    padding: 88px 0 96px;
+    padding: 50px 0 36px;
   }
 
   .about-section {
-    padding: 88px 0;
+    padding: 44px 0 32px;
   }
 
   .contact-inner {
     gap: 44px;
-    padding: 80px 0;
+    padding: 36px 0 80px;
   }
 }
 
@@ -566,7 +566,7 @@ h2 {
   .hero-section {
     min-height: 650px;
     min-height: min(740px, calc(100svh - 110px));
-    padding: 70px 20px 58px;
+    padding: 70px 20px 28px;
   }
 
   h1 {
@@ -601,7 +601,7 @@ h2 {
   }
 
   .works-section {
-    padding: 72px 0 78px;
+    padding: 42px 0 24px;
   }
 
   .section-heading {
@@ -628,7 +628,7 @@ h2 {
   }
 
   .about-section {
-    padding: 72px 0;
+    padding: 32px 0 24px;
   }
 
   .about-content > p:not(.eyebrow) {
@@ -653,7 +653,7 @@ h2 {
   .contact-inner {
     grid-template-columns: 1fr;
     gap: 34px;
-    padding: 70px 0;
+    padding: 30px 0 70px;
   }
 
   .contact-inner h2 {
