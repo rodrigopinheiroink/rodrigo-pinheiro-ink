@@ -15,8 +15,9 @@ function InteractiveDotField() {
   useEffect(() => {
     const canvas = canvasRef.current
     const context = canvas?.getContext('2d')
+    const waveMaskContext = document.createElement('canvas').getContext('2d')
 
-    if (!canvas || !context) {
+    if (!canvas || !context || !waveMaskContext) {
       return
     }
 
@@ -65,7 +66,7 @@ function InteractiveDotField() {
           (-waveTransform.b * transformedX + waveTransform.a * transformedY) / determinant +
           originY
 
-        return context.isPointInPath(
+        return waveMaskContext.isPointInPath(
           wavePath,
           (localX - backgroundOffsetX) / waveScale,
           localY / waveScale,
