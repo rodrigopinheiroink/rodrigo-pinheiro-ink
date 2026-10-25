@@ -359,7 +359,6 @@ h2 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
   padding-top: 22px;
-  border-top: 1px solid var(--line);
 }
 
 .process-list div {
@@ -391,7 +390,6 @@ h2 {
 }
 
 .contact-section {
-  border-top: 1px solid var(--line);
   background: transparent;
 }
 
@@ -430,7 +428,6 @@ h2 {
   display: flex;
   justify-content: space-between;
   padding: 17px 0;
-  border-bottom: 1px solid var(--line);
   color: #f3f3f3;
   font-family: var(--display);
   font-size: 27px;
@@ -648,7 +645,6 @@ h2 {
 
   .process-list div {
     padding-bottom: 17px;
-    border-bottom: 1px solid var(--line);
   }
 
   .process-list p {
