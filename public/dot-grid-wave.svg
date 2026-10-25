@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse">
+      <circle cx="9" cy="9" r="1" fill="#fff" fill-opacity=".52"/>
+    </pattern>
+    <filter id="wave" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency=".01 .024" numOctaves="2" seed="12" result="noise">
+        <animate attributeName="baseFrequency" values=".008 .018;.014 .034;.008 .018" dur="30s" repeatCount="indefinite"/>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="16" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#dots)" filter="url(#wave)" opacity=".48"/>
+</svg>
