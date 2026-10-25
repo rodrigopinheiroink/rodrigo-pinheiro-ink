@@ -108,7 +108,7 @@ nav a:hover::before,
   z-index: 0;
   inset: 0;
   content: '';
-  background: #000 url('/agent-wave.svg') center top / cover no-repeat;
+  background: url('/agent-wave.svg') center top / cover no-repeat;
   pointer-events: none;
   transform: translate3d(0, 0, 0);
   animation: hero-wave-drift 14s ease-in-out infinite alternate;
