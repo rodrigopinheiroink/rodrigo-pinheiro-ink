@@ -3,6 +3,7 @@ import InteractiveDotField from './InteractiveDotField.jsx'
 import tattooFirst from './assets/optimized/Tatuagem.webp'
 import tattooGeometry from './assets/optimized/Tatuagem-geo.webp'
 import tattooGeometric from './assets/optimized/Tatuagem-geometric.webp'
+import artistPortrait from './assets/perfil.webp'
 
 // Esta classe reúne os dados públicos do tatuador em um único objeto.
 // Ela é um exemplo pequeno de POO: a classe possui dados e métodos.
@@ -106,15 +107,15 @@ function App() {
       </section>
       <section className="contact-section" id="contato">
         <div className="section-width contact-inner">
-          <div>
-            <a className="eyebrow contact-eyebrow" href={artist.getWhatsAppLink()} target="_blank" rel="noreferrer">
-              03 · VAMOS CONVERSAR <span aria-hidden="true">↗</span>
-            </a>
+          <div className="contact-brand">
+            <img className="contact-portrait" src={artistPortrait} alt="Rodrigo Pinheiro" loading="lazy" decoding="async" />
             <h2>Rodrigo Pinheiro INK.</h2>
           </div>
           <div className="contact-details">
-            <a className="contact-link" href={artist.getWhatsAppLink()} target="_blank" rel="noreferrer">WhatsApp <span>↗</span></a>
-            <a className="contact-link" href="https://instagram.com/rodrigopinheiroink" target="_blank" rel="noreferrer">Instagram <span>↗</span></a>
+            <div className="contact-links">
+              <a className="button button-dark contact-link" href={artist.getWhatsAppLink()} target="_blank" rel="noreferrer">WhatsApp</a>
+              <a className="button button-dark contact-link" href="https://instagram.com/rodrigopinheiroink" target="_blank" rel="noreferrer">Instagram</a>
+            </div>
             <a
               className="address"
               href="https://www.google.com/maps/search/?api=1&query=Av.+Juca+Batista%2C+770+-+Ipanema%2C+Porto+Alegre+-+RS%2C+91770-000"
