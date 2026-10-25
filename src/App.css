@@ -111,17 +111,17 @@ nav a:hover::before,
   background: #000 url('/agent-wave.svg') center top / cover no-repeat;
   pointer-events: none;
   transform: translate3d(0, 0, 0);
-  animation: hero-wave-drift 24s ease-in-out infinite alternate;
+  animation: hero-wave-drift 14s ease-in-out infinite alternate;
   will-change: transform;
 }
 
 @keyframes hero-wave-drift {
   from {
-    transform: translate3d(-8px, -3px, 0) scale(1.01);
+    transform: translate3d(-26px, -18px, 0) scale(1.05);
   }
 
   to {
-    transform: translate3d(8px, 3px, 0) scale(1.035);
+    transform: translate3d(26px, 18px, 0) scale(1.11);
   }
 }
 

@@ -1,22 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
   <defs>
     <linearGradient id="silver" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#777"/>
-      <stop offset=".38" stop-color="#dedede"/>
-      <stop offset=".58" stop-color="#f4f4f4"/>
-      <stop offset=".82" stop-color="#858585"/>
-      <stop offset="1" stop-color="#333"/>
+      <stop offset="0" stop-color="#444"/>
+      <stop offset=".38" stop-color="#858585"/>
+      <stop offset=".58" stop-color="#b5b5b5"/>
+      <stop offset=".82" stop-color="#696969"/>
+      <stop offset="1" stop-color="#292929"/>
     </linearGradient>
     <linearGradient id="shine" x1="0" y1="0" x2="1" y2=".25">
       <stop offset="0" stop-color="#fff" stop-opacity="0"/>
-      <stop offset=".48" stop-color="#fff" stop-opacity=".4"/>
-      <stop offset=".58" stop-color="#fff" stop-opacity=".86"/>
+      <stop offset=".48" stop-color="#fff" stop-opacity=".2"/>
+      <stop offset=".58" stop-color="#fff" stop-opacity=".42"/>
       <stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </linearGradient>
   </defs>
-  <path fill="#aaa" opacity=".14" d="M-120 255C10 135 130 160 275 248S460 362 595 274 823 148 950 250s193 125 278 7 189-121 312-1v182c-122-91-202-90-321 1s-187 102-294 4-207-111-333-12-201 117-326 5S76 319-120 440Z"/>
+  <path fill="#aaa" opacity=".1" d="M-120 255C10 135 130 160 275 248S460 362 595 274 823 148 950 250s193 125 278 7 189-121 312-1v182c-122-91-202-90-321 1s-187 102-294 4-207-111-333-12-201 117-326 5S76 319-120 440Z"/>
   <g>
-    <path fill="url(#silver)" d="M-120 255C10 135 130 160 275 248S460 362 595 274 823 148 950 250s193 125 278 7 189-121 312-1v182c-122-91-202-90-321 1s-187 102-294 4-207-111-333-12-201 117-326 5S76 319-120 440Z"/>
-    <path fill="url(#shine)" opacity=".42" d="M-120 255C10 135 130 160 275 248S460 362 595 274 823 148 950 250s193 125 278 7 189-121 312-1v32c-129-92-198-79-319 33s-188 101-294 3-207-111-333-12-201 117-326 5S76 319-120 440Z"/>
+    <path fill="url(#silver)" opacity=".88" d="M-120 255C10 135 130 160 275 248S460 362 595 274 823 148 950 250s193 125 278 7 189-121 312-1v182c-122-91-202-90-321 1s-187 102-294 4-207-111-333-12-201 117-326 5S76 319-120 440Z"/>
+    <path fill="url(#shine)" opacity=".28" d="M-120 255C10 135 130 160 275 248S460 362 595 274 823 148 950 250s193 125 278 7 189-121 312-1v32c-129-92-198-79-319 33s-188 101-294 3-207-111-333-12-201 117-326 5S76 319-120 440Z"/>
   </g>
 </svg>
