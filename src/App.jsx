@@ -3,7 +3,11 @@ import InteractiveDotField from './InteractiveDotField.jsx'
 import tattooFirst from './assets/optimized/Tatuagem.webp'
 import tattooGeometry from './assets/optimized/Tatuagem-geo.webp'
 import tattooGeometric from './assets/optimized/Tatuagem-geometric.webp'
+import tattooGeometricC from './assets/optimized/Tatuagem-geometricc.webp'
+import tattooGeometricCC from './assets/optimized/Tatuagem-geometriccc.webp'
+import tattooGeometricCCC from './assets/optimized/Tatuagem-geometricccc.webp'
 import artistPortrait from './assets/perfil.webp'
+import { useEffect, useRef } from 'react'
 
 // Esta classe reúne os dados públicos do tatuador em um único objeto.
 // Ela é um exemplo pequeno de POO: a classe possui dados e métodos.
@@ -35,7 +39,181 @@ const tattooWorks = [
   { image: tattooFirst },
   { image: tattooGeometry },
   { image: tattooGeometric },
+  { image: tattooGeometricC },
+  { image: tattooGeometricCC },
+  { image: tattooGeometricCCC },
 ]
+
+function wrapCarouselOffset(offset, period) {
+  const normalized = ((offset % period) + period) % period
+  return normalized === 0 ? -period : normalized - period
+}
+
+function WorkCarousel() {
+  const carouselRef = useRef(null)
+  const trackRef = useRef(null)
+  const motionRef = useRef({
+    offset: 0,
+    period: 0,
+    lastFrame: null,
+    direction: -1,
+    userDirected: false,
+    dragging: false,
+    hovered: false,
+    continueAfterDrag: false,
+    hasDragged: false,
+    pointerId: null,
+    pointerX: 0,
+    releaseStartedAt: null,
+    peakSpeed: 0,
+    prefersReducedMotion: false,
+  })
+
+  useEffect(() => {
+    const track = trackRef.current
+    const motion = motionRef.current
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let animationFrame
+
+    const measurePeriod = () => {
+      const firstGroup = track.firstElementChild
+      if (!firstGroup) return
+
+      const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0
+      motion.period = firstGroup.getBoundingClientRect().width + gap
+      if (motion.period > 0) {
+        motion.offset = wrapCarouselOffset(motion.offset, motion.period)
+        track.style.transform = `translate3d(${motion.offset}px, 0, 0)`
+      }
+    }
+
+    const updateReducedMotion = () => {
+      motion.prefersReducedMotion = reducedMotionQuery.matches
+    }
+
+    const animate = (timestamp) => {
+      if (motion.lastFrame === null) motion.lastFrame = timestamp
+      const elapsed = Math.min((timestamp - motion.lastFrame) / 1000, 0.05)
+      motion.lastFrame = timestamp
+
+      if (!motion.dragging && (!motion.hovered || motion.releaseStartedAt !== null || motion.continueAfterDrag)) {
+        let speed = motion.prefersReducedMotion && !motion.userDirected ? 0 : motion.direction * 42
+
+        if (motion.releaseStartedAt !== null) {
+          const progress = Math.min((timestamp - motion.releaseStartedAt) / 1100, 1)
+          const easedProgress = 1 - (1 - progress) ** 3
+          speed = motion.peakSpeed + (motion.direction * 42 - motion.peakSpeed) * easedProgress
+
+          if (progress === 1) motion.releaseStartedAt = null
+        }
+
+        motion.offset += speed * elapsed
+        if (motion.period > 0) {
+          motion.offset = wrapCarouselOffset(motion.offset, motion.period)
+        }
+        track.style.transform = `translate3d(${motion.offset}px, 0, 0)`
+      }
+
+      animationFrame = requestAnimationFrame(animate)
+    }
+
+    updateReducedMotion()
+    measurePeriod()
+    const resizeObserver = new ResizeObserver(measurePeriod)
+    resizeObserver.observe(track.firstElementChild)
+    reducedMotionQuery.addEventListener('change', updateReducedMotion)
+    animationFrame = requestAnimationFrame(animate)
+
+    return () => {
+      cancelAnimationFrame(animationFrame)
+      resizeObserver.disconnect()
+      reducedMotionQuery.removeEventListener('change', updateReducedMotion)
+    }
+  }, [])
+
+  const handlePointerDown = (event) => {
+    if (event.button !== 0 || event.isPrimary === false) return
+
+    const motion = motionRef.current
+    motion.dragging = true
+    motion.continueAfterDrag = false
+    motion.hasDragged = false
+    motion.releaseStartedAt = null
+    motion.pointerId = event.pointerId
+    motion.pointerX = event.clientX
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  const handlePointerMove = (event) => {
+    const motion = motionRef.current
+    if (!motion.dragging || motion.pointerId !== event.pointerId) return
+
+    const delta = event.clientX - motion.pointerX
+    motion.pointerX = event.clientX
+    if (delta === 0) return
+
+    motion.hasDragged = true
+    motion.direction = Math.sign(delta)
+    motion.userDirected = true
+    motion.peakSpeed = motion.direction * 260
+    motion.offset += delta
+    if (motion.period > 0) {
+      motion.offset = wrapCarouselOffset(motion.offset, motion.period)
+    }
+    trackRef.current.style.transform = `translate3d(${motion.offset}px, 0, 0)`
+  }
+
+  const handlePointerUp = (event) => {
+    const motion = motionRef.current
+    if (!motion.dragging || motion.pointerId !== event.pointerId) return
+
+    motion.dragging = false
+    motion.pointerId = null
+    motion.continueAfterDrag = motion.hasDragged
+    motion.releaseStartedAt = motion.hasDragged ? performance.now() : null
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+    }
+  }
+
+  const handlePointerLeave = () => {
+    const motion = motionRef.current
+    motion.hovered = false
+    motion.continueAfterDrag = false
+  }
+
+  return (
+    <div
+      ref={carouselRef}
+      className="work-carousel"
+      role="region"
+      aria-label="Galeria de tatuagens. Arraste para mudar a direção."
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+      onPointerEnter={() => { motionRef.current.hovered = true }}
+      onPointerLeave={handlePointerLeave}
+    >
+      <div className="work-track" ref={trackRef}>
+        <div className="work-group">
+          {tattooWorks.map((work) => (
+            <article className="work-card" key={work.image}>
+              <img src={work.image} alt="Tatuagem de pontilhismo" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />
+            </article>
+          ))}
+        </div>
+        <div className="work-group" aria-hidden="true">
+          {tattooWorks.map((work) => (
+            <article className="work-card" key={`duplicate-${work.image}`}>
+              <img src={work.image} alt="" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function App() {
   return (
@@ -72,13 +250,7 @@ function App() {
           </div>
           <p>Desenhos que encontram equilíbrio entre precisão, textura e personalidade.</p>
         </div>
-        <div className="work-grid">
-          {tattooWorks.map((work) => (
-            <article className="work-card" key={work.image}>
-              <img src={work.image} alt="Exemplo de tatuagem" loading="lazy" decoding="async" fetchPriority="low" />
-            </article>
-          ))}
-        </div>
+        <WorkCarousel />
       </section>
       <section className="about-section section-width" id="sobre">
         
@@ -130,7 +302,6 @@ function App() {
       <InteractiveDotField />
       <footer className="site-footer section-width">
         <span>© 2026 {artist.name}</span>
-        <span>Feito com intenção.</span>
       </footer>
     </main>
   )
