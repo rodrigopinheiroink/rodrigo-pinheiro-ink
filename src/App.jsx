@@ -78,6 +78,12 @@ function WorkCarousel({ works, label, imageAlt }) {
     peakSpeed: 0,
     prefersReducedMotion: false,
     touchHoveredCard: null,
+    touchPaused: false,
+    pausedImage: null,
+    touchStartImage: null,
+    touchStartX: 0,
+    touchStartY: 0,
+    touchMoved: false,
   })
 
   useEffect(() => {
@@ -107,7 +113,7 @@ function WorkCarousel({ works, label, imageAlt }) {
       const elapsed = Math.min((timestamp - motion.lastFrame) / 1000, 0.05)
       motion.lastFrame = timestamp
 
-      if (!motion.dragging && (!motion.hovered || motion.releaseStartedAt !== null || motion.continueAfterDrag)) {
+      if (!motion.touchPaused && !motion.dragging && (!motion.hovered || motion.releaseStartedAt !== null || motion.continueAfterDrag)) {
         let speed = motion.prefersReducedMotion && !motion.userDirected ? 0 : motion.direction * 42
 
         if (motion.releaseStartedAt !== null) {
@@ -158,6 +164,13 @@ function WorkCarousel({ works, label, imageAlt }) {
     motion.touchHoveredCard = nextCard
   }
 
+  const getTouchImage = (event) => {
+    const carousel = carouselRef.current
+    const target = document.elementFromPoint(event.clientX, event.clientY)
+    const card = target?.closest('.work-card')
+    return card && carousel?.contains(card) ? card.querySelector('img')?.currentSrc : null
+  }
+
   const clearTouchHover = () => {
     const motion = motionRef.current
     motion.touchHoveredCard?.classList.remove('is-touch-hover')
@@ -169,6 +182,12 @@ function WorkCarousel({ works, label, imageAlt }) {
 
     updateTouchHover(event)
     const motion = motionRef.current
+    if (event.pointerType === 'touch') {
+      motion.touchStartImage = getTouchImage(event)
+      motion.touchStartX = event.clientX
+      motion.touchStartY = event.clientY
+      motion.touchMoved = false
+    }
     motion.dragging = true
     motion.continueAfterDrag = false
     motion.hasDragged = false
@@ -182,6 +201,18 @@ function WorkCarousel({ works, label, imageAlt }) {
     updateTouchHover(event)
     const motion = motionRef.current
     if (!motion.dragging || motion.pointerId !== event.pointerId) return
+
+    if (event.pointerType === 'touch') {
+      const distance = Math.hypot(
+        event.clientX - motion.touchStartX,
+        event.clientY - motion.touchStartY,
+      )
+      if (distance > 6) {
+        motion.touchMoved = true
+        motion.touchPaused = false
+        motion.pausedImage = null
+      }
+    }
 
     const delta = event.clientX - motion.pointerX
     motion.pointerX = event.clientX
@@ -200,12 +231,39 @@ function WorkCarousel({ works, label, imageAlt }) {
 
   const handlePointerUp = (event) => {
     const motion = motionRef.current
+    const touchMoved = event.pointerType === 'touch' && (
+      motion.touchMoved ||
+      Math.hypot(
+        event.clientX - motion.touchStartX,
+        event.clientY - motion.touchStartY,
+      ) > 6
+    )
     clearTouchHover()
     if (!motion.dragging || motion.pointerId !== event.pointerId) return
 
+    if (event.pointerType === 'touch') {
+      if (touchMoved) {
+        motion.touchPaused = false
+        motion.pausedImage = null
+      } else if (event.type === 'pointerup' && motion.touchStartImage) {
+        const releasedImage = getTouchImage(event)
+        if (releasedImage === motion.touchStartImage) {
+          if (motion.touchPaused && motion.pausedImage === releasedImage) {
+            motion.touchPaused = false
+            motion.pausedImage = null
+          } else if (!motion.touchPaused) {
+            motion.touchPaused = true
+            motion.pausedImage = releasedImage
+          }
+        }
+      }
+      motion.touchStartImage = null
+      motion.touchMoved = false
+    }
+
     motion.dragging = false
     motion.pointerId = null
-    motion.continueAfterDrag = motion.hasDragged
+    motion.continueAfterDrag = motion.hasDragged || touchMoved
     motion.releaseStartedAt = motion.hasDragged ? performance.now() : null
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId)
