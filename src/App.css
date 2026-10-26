@@ -270,10 +270,11 @@ h1::first-line {
 
 .section-heading {
   display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 32px;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 44px;
+  text-align: center;
 }
 
 h2 {
@@ -284,19 +285,40 @@ h2 {
 }
 
 .section-heading > p {
-  max-width: 300px;
+  max-width: 560px;
   color: var(--muted);
   font-size: 14px;
   line-height: 1.65;
 }
 
-.work-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+.work-carousel {
+  --gallery-gap: 16px;
+  width: 100%;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.work-carousel:active {
+  cursor: grabbing;
+}
+
+.work-track {
+  display: flex;
+  width: max-content;
+  gap: var(--gallery-gap);
+  padding-right: var(--gallery-gap);
+  will-change: transform;
+}
+
+.work-group {
+  display: flex;
+  gap: var(--gallery-gap);
 }
 
 .work-card {
+  flex: 0 0 calc((min(1440px, 100vw - 80px) - 32px) / 3);
   min-width: 0;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -505,6 +527,10 @@ h2 {
     width: calc(100% - 48px);
   }
 
+  .work-card {
+    flex-basis: calc((min(1440px, 100vw - 48px) - 32px) / 3);
+  }
+
   .site-header {
     min-height: 76px;
   }
@@ -623,13 +649,16 @@ h2 {
     font-size: 13px;
   }
 
-  .work-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
+  .work-carousel {
+    --gallery-gap: 14px;
   }
 
   .work-card img {
     aspect-ratio: 1 / 1;
+  }
+
+  .work-card {
+    flex-basis: calc(100vw - 36px);
   }
 
   .about-section {
@@ -679,6 +708,10 @@ h2 {
   .hero-section::before {
     animation: none;
     will-change: auto;
+  }
+
+  .work-carousel {
+    overflow-x: auto;
   }
 
   .work-card img {
