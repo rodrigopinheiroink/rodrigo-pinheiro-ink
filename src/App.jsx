@@ -7,6 +7,9 @@ import tattooGeometricC from './assets/optimized/Tatuagem-geometricc.webp'
 import tattooGeometricCC from './assets/optimized/Tatuagem-geometriccc.webp'
 import tattooGeometricCCC from './assets/optimized/Tatuagem-geometricccc.webp'
 import artistPortrait from './assets/perfil.webp'
+import profileFirst from './assets/perfill.webp'
+import profileSecond from './assets/perfilll.webp'
+import profileThird from './assets/perfillll.webp'
 import { useEffect, useRef } from 'react'
 
 // Esta classe reúne os dados públicos do tatuador em um único objeto.
@@ -44,12 +47,19 @@ const tattooWorks = [
   { image: tattooGeometricCCC },
 ]
 
+const profileWorks = [
+  { image: artistPortrait },
+  { image: profileFirst },
+  { image: profileSecond },
+  { image: profileThird },
+]
+
 function wrapCarouselOffset(offset, period) {
   const normalized = ((offset % period) + period) % period
   return normalized === 0 ? -period : normalized - period
 }
 
-function WorkCarousel() {
+function WorkCarousel({ works, label, imageAlt }) {
   const carouselRef = useRef(null)
   const trackRef = useRef(null)
   const motionRef = useRef({
@@ -187,7 +197,7 @@ function WorkCarousel() {
       ref={carouselRef}
       className="work-carousel"
       role="region"
-      aria-label="Galeria de tatuagens. Arraste para mudar a direção."
+      aria-label={label}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
@@ -197,14 +207,14 @@ function WorkCarousel() {
     >
       <div className="work-track" ref={trackRef}>
         <div className="work-group">
-          {tattooWorks.map((work) => (
+          {works.map((work) => (
             <article className="work-card" key={work.image}>
-              <img src={work.image} alt="Tatuagem de pontilhismo" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />
+              <img src={work.image} alt={imageAlt} loading="lazy" decoding="async" fetchPriority="low" draggable="false" />
             </article>
           ))}
         </div>
         <div className="work-group" aria-hidden="true">
-          {tattooWorks.map((work) => (
+          {works.map((work) => (
             <article className="work-card" key={`duplicate-${work.image}`}>
               <img src={work.image} alt="" loading="lazy" decoding="async" fetchPriority="low" draggable="false" />
             </article>
@@ -250,7 +260,11 @@ function App() {
           </div>
           <p>Desenhos que encontram equilíbrio entre precisão, textura e personalidade.</p>
         </div>
-        <WorkCarousel />
+        <WorkCarousel
+          works={tattooWorks}
+          label="Galeria de tatuagens. Arraste para mudar a direção."
+          imageAlt="Tatuagem de pontilhismo"
+        />
       </section>
       <section className="about-section section-width" id="sobre">
         
@@ -280,7 +294,11 @@ function App() {
       <section className="contact-section" id="contato">
         <div className="section-width contact-inner">
           <div className="contact-brand">
-            <img className="contact-portrait" src={artistPortrait} alt="Rodrigo Pinheiro" loading="lazy" decoding="async" />
+            <WorkCarousel
+              works={profileWorks}
+              label="Galeria de fotos de Rodrigo Pinheiro. Arraste para mudar a direção."
+              imageAlt="Foto de Rodrigo Pinheiro"
+            />
             <h2>Rodrigo Pinheiro INK.</h2>
           </div>
           <div className="contact-details">
