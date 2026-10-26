@@ -84,6 +84,7 @@ function WorkCarousel({ works, label, imageAlt }) {
     touchStartX: 0,
     touchStartY: 0,
     touchMoved: false,
+    centerAnimation: null,
   })
 
   useEffect(() => {
@@ -113,7 +114,18 @@ function WorkCarousel({ works, label, imageAlt }) {
       const elapsed = Math.min((timestamp - motion.lastFrame) / 1000, 0.05)
       motion.lastFrame = timestamp
 
-      if (!motion.touchPaused && !motion.dragging && (!motion.hovered || motion.releaseStartedAt !== null || motion.continueAfterDrag)) {
+      if (motion.centerAnimation) {
+        const { startOffset, targetOffset, startedAt, duration } = motion.centerAnimation
+        const progress = Math.min((timestamp - startedAt) / duration, 1)
+        const easedProgress = 1 - (1 - progress) ** 3
+        motion.offset = startOffset + (targetOffset - startOffset) * easedProgress
+
+        if (progress === 1) {
+          motion.offset = wrapCarouselOffset(motion.offset, motion.period)
+          motion.centerAnimation = null
+        }
+        track.style.transform = `translate3d(${motion.offset}px, 0, 0)`
+      } else if (!motion.touchPaused && !motion.dragging && (!motion.hovered || motion.releaseStartedAt !== null || motion.continueAfterDrag)) {
         let speed = motion.prefersReducedMotion && !motion.userDirected ? 0 : motion.direction * 42
 
         if (motion.releaseStartedAt !== null) {
@@ -164,11 +176,30 @@ function WorkCarousel({ works, label, imageAlt }) {
     motion.touchHoveredCard = nextCard
   }
 
-  const getTouchImage = (event) => {
+  const getTouchCard = (event) => {
     const carousel = carouselRef.current
     const target = document.elementFromPoint(event.clientX, event.clientY)
     const card = target?.closest('.work-card')
-    return card && carousel?.contains(card) ? card.querySelector('img')?.currentSrc : null
+    return card && carousel?.contains(card) ? card : null
+  }
+
+  const centerTouchCard = (card, image) => {
+    const carousel = carouselRef.current
+    const carouselBounds = carousel.getBoundingClientRect()
+    const imageBounds = card.querySelector('img').getBoundingClientRect()
+    const centerDelta = carouselBounds.left + carouselBounds.width / 2 - (imageBounds.left + imageBounds.width / 2)
+    const motion = motionRef.current
+
+    motion.touchPaused = true
+    motion.pausedImage = image
+    motion.releaseStartedAt = null
+    motion.continueAfterDrag = false
+    motion.centerAnimation = {
+      startOffset: motion.offset,
+      targetOffset: motion.offset + centerDelta,
+      startedAt: performance.now(),
+      duration: Math.min(850, Math.max(350, Math.abs(centerDelta) * 1.2)),
+    }
   }
 
   const clearTouchHover = () => {
@@ -183,10 +214,11 @@ function WorkCarousel({ works, label, imageAlt }) {
     updateTouchHover(event)
     const motion = motionRef.current
     if (event.pointerType === 'touch') {
-      motion.touchStartImage = getTouchImage(event)
+      motion.touchStartImage = getTouchCard(event)?.querySelector('img')?.currentSrc ?? null
       motion.touchStartX = event.clientX
       motion.touchStartY = event.clientY
       motion.touchMoved = false
+      motion.centerAnimation = null
     }
     motion.dragging = true
     motion.continueAfterDrag = false
@@ -211,6 +243,7 @@ function WorkCarousel({ works, label, imageAlt }) {
         motion.touchMoved = true
         motion.touchPaused = false
         motion.pausedImage = null
+        motion.centerAnimation = null
       }
     }
 
@@ -246,14 +279,15 @@ function WorkCarousel({ works, label, imageAlt }) {
         motion.touchPaused = false
         motion.pausedImage = null
       } else if (event.type === 'pointerup' && motion.touchStartImage) {
-        const releasedImage = getTouchImage(event)
+        const releasedCard = getTouchCard(event)
+        const releasedImage = releasedCard?.querySelector('img')?.currentSrc
         if (releasedImage === motion.touchStartImage) {
           if (motion.touchPaused && motion.pausedImage === releasedImage) {
             motion.touchPaused = false
             motion.pausedImage = null
-          } else if (!motion.touchPaused) {
-            motion.touchPaused = true
-            motion.pausedImage = releasedImage
+            motion.centerAnimation = null
+          } else if (releasedCard) {
+            centerTouchCard(releasedCard, releasedImage)
           }
         }
       }
