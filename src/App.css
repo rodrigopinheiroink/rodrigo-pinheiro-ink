@@ -339,6 +339,13 @@ h2 {
   transform: scale(1.025);
 }
 
+@media (hover: none) and (pointer: coarse) {
+  .work-card.is-touch-hover img {
+    filter: grayscale(0.25) brightness(1);
+    transform: scale(1.025);
+  }
+}
+
 .work-info {
   padding: 18px 0;
 }

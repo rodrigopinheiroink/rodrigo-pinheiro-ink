@@ -77,6 +77,7 @@ function WorkCarousel({ works, label, imageAlt }) {
     releaseStartedAt: null,
     peakSpeed: 0,
     prefersReducedMotion: false,
+    touchHoveredCard: null,
   })
 
   useEffect(() => {
@@ -141,9 +142,32 @@ function WorkCarousel({ works, label, imageAlt }) {
     }
   }, [])
 
+  const updateTouchHover = (event) => {
+    if (event.pointerType !== 'touch') return
+
+    const carousel = carouselRef.current
+    const target = document.elementFromPoint(event.clientX, event.clientY)
+    const card = target?.closest('.work-card')
+    const nextCard = card && carousel?.contains(card) ? card : null
+    const motion = motionRef.current
+
+    if (motion.touchHoveredCard === nextCard) return
+
+    motion.touchHoveredCard?.classList.remove('is-touch-hover')
+    nextCard?.classList.add('is-touch-hover')
+    motion.touchHoveredCard = nextCard
+  }
+
+  const clearTouchHover = () => {
+    const motion = motionRef.current
+    motion.touchHoveredCard?.classList.remove('is-touch-hover')
+    motion.touchHoveredCard = null
+  }
+
   const handlePointerDown = (event) => {
     if (event.button !== 0 || event.isPrimary === false) return
 
+    updateTouchHover(event)
     const motion = motionRef.current
     motion.dragging = true
     motion.continueAfterDrag = false
@@ -155,6 +179,7 @@ function WorkCarousel({ works, label, imageAlt }) {
   }
 
   const handlePointerMove = (event) => {
+    updateTouchHover(event)
     const motion = motionRef.current
     if (!motion.dragging || motion.pointerId !== event.pointerId) return
 
@@ -175,6 +200,7 @@ function WorkCarousel({ works, label, imageAlt }) {
 
   const handlePointerUp = (event) => {
     const motion = motionRef.current
+    clearTouchHover()
     if (!motion.dragging || motion.pointerId !== event.pointerId) return
 
     motion.dragging = false
