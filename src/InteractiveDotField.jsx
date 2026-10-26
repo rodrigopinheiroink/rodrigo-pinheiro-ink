@@ -124,6 +124,13 @@ function InteractiveDotField() {
       }
     }
 
+    const cancelFade = () => {
+      if (fadeFrame) {
+        window.cancelAnimationFrame(fadeFrame)
+        fadeFrame = 0
+      }
+    }
+
     const fadeBack = (startTime, startingStrength) => {
       const step = (time) => {
         const progress = Math.min((time - startTime) / 420, 1)
@@ -142,20 +149,37 @@ function InteractiveDotField() {
       fadeFrame = window.requestAnimationFrame(step)
     }
 
+    const updatePointer = (x, y) => {
+      pointer = { x, y }
+      strength = 1
+      cancelFade()
+      scheduleDraw()
+    }
+
     const handlePointerMove = (event) => {
       if (reducedMotion || (event.pointerType !== 'mouse' && event.pointerType !== 'pen')) {
         return
       }
 
-      pointer = { x: event.clientX, y: event.clientY }
-      strength = 1
+      updatePointer(event.clientX, event.clientY)
+    }
 
-      if (fadeFrame) {
-        window.cancelAnimationFrame(fadeFrame)
-        fadeFrame = 0
+    const handleTouchMove = (event) => {
+      if (reducedMotion || !event.touches.length) {
+        return
       }
 
-      scheduleDraw()
+      const touch = event.touches[0]
+      updatePointer(touch.clientX, touch.clientY)
+    }
+
+    const handleTouchEnd = () => {
+      if (reducedMotion || !pointer) {
+        return
+      }
+
+      cancelFade()
+      fadeBack(performance.now(), strength)
     }
 
     const handlePointerLeave = (event) => {
@@ -164,7 +188,7 @@ function InteractiveDotField() {
       }
 
       if (fadeFrame) {
-        window.cancelAnimationFrame(fadeFrame)
+        cancelFade()
       }
 
       fadeBack(performance.now(), strength)
@@ -176,7 +200,7 @@ function InteractiveDotField() {
       }
 
       if (fadeFrame) {
-        window.cancelAnimationFrame(fadeFrame)
+        cancelFade()
       }
 
       fadeBack(performance.now(), strength)
@@ -194,6 +218,9 @@ function InteractiveDotField() {
     resize()
     window.addEventListener('resize', resize)
     window.addEventListener('pointermove', handlePointerMove, { passive: true })
+    window.addEventListener('touchmove', handleTouchMove, { passive: true })
+    window.addEventListener('touchend', handleTouchEnd, { passive: true })
+    window.addEventListener('touchcancel', handleTouchEnd, { passive: true })
     window.addEventListener('pointerout', handlePointerLeave)
     window.addEventListener('blur', handleWindowBlur)
 
@@ -204,6 +231,9 @@ function InteractiveDotField() {
     return () => {
       window.removeEventListener('resize', resize)
       window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('touchmove', handleTouchMove)
+      window.removeEventListener('touchend', handleTouchEnd)
+      window.removeEventListener('touchcancel', handleTouchEnd)
       window.removeEventListener('pointerout', handlePointerLeave)
       window.removeEventListener('blur', handleWindowBlur)
 
